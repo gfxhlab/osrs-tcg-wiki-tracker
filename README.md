@@ -10,13 +10,15 @@ This project is currently distributed as an unpacked extension rather than throu
 
 ### Download
 
-Either clone this repository:
+For the easiest installation, download the latest release ZIP from the [Releases page](https://github.com/gfxhlab/osrs-tcg-wiki-tracker/releases/latest).
+
+Developers can instead clone this repository:
 
 ```bash
 git clone https://github.com/gfxhlab/osrs-tcg-wiki-tracker.git
 ```
 
-Or use **Code → Download ZIP** on GitHub and extract the ZIP.
+Extract the release ZIP before loading it in Chrome.
 
 ### Load the extension
 
@@ -29,7 +31,7 @@ Or use **Code → Download ZIP** on GitHub and extract the ZIP.
 
 ### Update
 
-To update a cloned installation, pull the latest changes, then open `chrome://extensions` and click the extension's **Reload** button. For a ZIP installation, download and extract the latest version, remove the old unpacked folder, and load the new folder through **Load unpacked**.
+To update a cloned installation, pull the latest changes, then open `chrome://extensions` and click the extension's **Reload** button. For a release ZIP installation, download and extract the latest release, then use **Load unpacked** to select the extracted folder containing `manifest.json`. Remove the older unpacked copy from `chrome://extensions` if it is still listed separately.
 
 ## Features
 
