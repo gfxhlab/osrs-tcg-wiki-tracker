@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "OSRS TCG Wiki Tracker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "See which OSRS TCG cards you own while browsing the Old School RuneScape Wiki.",
   "permissions": [
     "alarms",
