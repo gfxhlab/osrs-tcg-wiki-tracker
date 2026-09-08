@@ -1,0 +1,89 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  color: #222;
+  background: #f6f4ef;
+}
+
+main {
+  padding: 18px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.intro {
+  margin: 0 0 18px;
+  color: #666;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  margin: 14px 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+input,
+select,
+button {
+  box-sizing: border-box;
+  min-height: 34px;
+  border: 1px solid #b9b4a8;
+  border-radius: 4px;
+  font: inherit;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 6px 8px;
+  background: #fff;
+  color: #222;
+}
+
+button {
+  padding: 6px 12px;
+  color: #fff;
+  background: #1769aa;
+  cursor: pointer;
+}
+
+button.secondary {
+  color: #333;
+  background: transparent;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.status {
+  min-height: 18px;
+  margin: 14px 0 0;
+  color: #555;
+  font-size: 12px;
+}
+
+.status:empty {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  body { color: #eee; background: #252525; }
+  .intro, .status { color: #bbb; }
+  input, select { color: #eee; background: #333; border-color: #666; }
+  button.secondary { color: #eee; }
+}

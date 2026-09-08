@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "OSRS TCG Wiki Tracker",
+  "version": "0.1.0",
+  "description": "See which OSRS TCG cards you own while browsing the Old School RuneScape Wiki.",
+  "permissions": [
+    "alarms",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://api.osrs-tcg.net/*",
+    "https://osrs-tcg.net/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "OSRS TCG Wiki Tracker",
+    "default_popup": "options.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://oldschool.runescape.wiki/w/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+.osrs-tcg-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  padding: 3px 9px 3px 5px;
+  border: 1px solid;
+  border-radius: 5px;
+  font: 600 11px/1.25 system-ui, sans-serif;
+  letter-spacing: .01em;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.osrs-tcg-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #18733a;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+}
+
+#osrs-tcg-status {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  margin: 2px 0 12px;
+}
+
+.osrs-tcg-status--owned {
+  color: #18733a;
+  border-color: #8dbb9a;
+  background: #edf8f0;
+}
+
+.osrs-tcg-status--missing {
+  color: #a03434;
+  border-color: #d39a9a;
+  background: #fff3f2;
+}
+
+.osrs-tcg-status--missing .osrs-tcg-status-indicator {
+  background: #a03434;
+}
+
+.osrs-tcg-link-status {
+  display: inline-block;
+  min-width: 1em;
+  margin-left: 3px;
+  color: #777;
+  font: 700 12px/1 system-ui, sans-serif;
+  text-decoration: none;
+  vertical-align: baseline;
+}
+
+.osrs-tcg-link-status--owned {
+  color: #16803c;
+}
+
+.osrs-tcg-link-status--missing {
+  color: #b42318;
+}
+
+.osrs-tcg-infobox-detail-row th,
+.osrs-tcg-infobox-detail-row td {
+  vertical-align: middle;
+}
+
+.osrs-tcg-infobox-detail-row th {
+  white-space: nowrap;
+}
+
+.osrs-tcg-infobox-value--owned {
+  color: #16803c;
+  font-weight: 700;
+}
+
+.osrs-tcg-infobox-value--missing {
+  color: #b42318;
+  font-weight: 700;
+}
