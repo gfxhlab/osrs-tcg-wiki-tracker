@@ -40,6 +40,18 @@ To update a cloned installation, pull the latest changes, then open `chrome://ex
 
 The extension stores your RSN, refresh preference, and cached public collection/catalog data in the browser's local extension storage. It requests public data from `api.osrs-tcg.net`, reads matching OSRS Wiki pages, and does not send collection data to a separate project server.
 
+## Respectful API usage
+
+The extension is designed to minimize requests to the OSRS TCG API:
+
+- It checks the small player-stats endpoint on a scheduled interval, defaulting to every 15 minutes. Users can choose 20 or 30 minutes instead.
+- Browsing between Wiki pages does not fetch the player collection again. Pages use the cached snapshot held by the extension.
+- The full player collection is fetched only when the stats response changes or the user changes RSN.
+- `ETag`/`If-None-Match` headers allow the API to return `304 Not Modified` when data has not changed, avoiding an unchanged response body.
+- The card catalog is cached locally and refreshed at most every 30 minutes.
+- Wiki redirect and infobox lookups are cached locally for seven days, so repeated links do not cause repeated Wiki requests.
+- The extension uses public read-only endpoints and does not submit, modify, or delete collection data.
+
 ## Features
 
 - Shows owned, locked, and no-card statuses on supported Wiki pages.
