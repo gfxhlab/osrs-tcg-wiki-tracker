@@ -90,9 +90,16 @@ button.secondary {
   color: #1769aa;
 }
 
+.version {
+  margin: 6px 0 0;
+  color: #777;
+  font-size: 11px;
+}
+
 @media (prefers-color-scheme: dark) {
   body { color: #eee; background: #252525; }
   .intro, .status { color: #bbb; }
+  .version { color: #aaa; }
   input, select { color: #eee; background: #333; border-color: #666; }
   button.secondary { color: #eee; }
   .source-link a { color: #6db3e8; }

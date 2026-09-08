@@ -1,6 +1,7 @@
 const albumInput = document.querySelector('#album');
 const refreshInput = document.querySelector('#refreshMinutes');
 const status = document.querySelector('#status');
+document.querySelector('#version').textContent = `Version ${chrome.runtime.getManifest().version}`;
 
 document.querySelector('#save').addEventListener('click', async () => {
   const response = await send({
