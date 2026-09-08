@@ -31,6 +31,14 @@ Or use **Code → Download ZIP** on GitHub and extract the ZIP.
 
 To update a cloned installation, pull the latest changes, then open `chrome://extensions` and click the extension's **Reload** button. For a ZIP installation, download and extract the latest version, remove the old unpacked folder, and load the new folder through **Load unpacked**.
 
+## Features
+
+- Shows owned, locked, and no-card statuses on supported Wiki pages.
+- Shows copies, foil/non-foil finish, and variant information when available.
+- Annotates matching item and NPC links inside quests and guides.
+- Refreshes public collection data every 15, 20, or 30 minutes; the default is 15 minutes.
+- Caches unchanged API responses and Wiki redirect lookups to reduce requests.
+
 ## Requirements
 
 - Google Chrome or another Chromium-based browser that supports Manifest V3.
@@ -51,14 +59,6 @@ The extension is designed to minimize requests to the OSRS TCG API:
 - The card catalog is cached locally and refreshed at most every 30 minutes.
 - Wiki redirect and infobox lookups are cached locally for seven days, so repeated links do not cause repeated Wiki requests.
 - The extension uses public read-only endpoints and does not submit, modify, or delete collection data.
-
-## Features
-
-- Shows owned, locked, and no-card statuses on supported Wiki pages.
-- Shows copies, foil/non-foil finish, and variant information when available.
-- Annotates matching item and NPC links inside quests and guides.
-- Refreshes public collection data every 15, 20, or 30 minutes; the default is 15 minutes.
-- Caches unchanged API responses and Wiki redirect lookups to reduce requests.
 
 ## Data flow
 
