@@ -264,7 +264,7 @@ async function openAlbumSearch(album, query) {
   const safeAlbum = String(album || '').trim().replace(/^@/, '');
   const searchQuery = String(query || '').trim();
   if (!safeAlbum || !searchQuery) {
-    return { ok: false, error: 'Album search requires an album and card name.' };
+    return { ok: false, error: 'Card search requires an RSN and card name.' };
   }
 
   const tab = await chrome.tabs.create({

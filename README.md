@@ -2,7 +2,7 @@
 
 Chrome extension that shows your public OSRS TCG collection status while browsing the Old School RuneScape Wiki.
 
-It adds status badges to item and NPC pages, and annotates matching links on quest and guide pages. Card-backed statuses link to the matching card search in your OSRS TCG album.
+It adds status badges to item and NPC pages, and annotates matching links on quest and guide pages. Card-backed statuses link to the matching card search in your OSRS TCG collection.
 
 ## Install in Chrome
 
@@ -24,7 +24,7 @@ Or use **Code → Download ZIP** on GitHub and extract the ZIP.
 2. Enable **Developer mode**.
 3. Click **Load unpacked**.
 4. Select the downloaded or cloned repository directory—the folder containing `manifest.json`.
-5. Open the extension popup and enter a public album name. It defaults to `FoilsGold`.
+5. Open the extension popup and enter your public RuneScape username (RSN). It defaults to `FoilsGold`.
 6. Open or reload an OSRS Wiki item page, such as `https://oldschool.runescape.wiki/w/Excalibur`.
 
 ### Update
@@ -34,11 +34,11 @@ To update a cloned installation, pull the latest changes, then open `chrome://ex
 ## Requirements
 
 - Google Chrome or another Chromium-based browser that supports Manifest V3.
-- A public OSRS TCG album. No login or private collection access is required.
+- A public OSRS TCG collection associated with your RSN. No login or private collection access is required.
 
 ## Privacy
 
-The extension stores your album name, refresh preference, and cached public album/catalog data in the browser's local extension storage. It requests public data from `api.osrs-tcg.net`, reads matching OSRS Wiki pages, and does not send collection data to a separate project server.
+The extension stores your RSN, refresh preference, and cached public collection/catalog data in the browser's local extension storage. It requests public data from `api.osrs-tcg.net`, reads matching OSRS Wiki pages, and does not send collection data to a separate project server.
 
 ## Features
 
@@ -50,15 +50,15 @@ The extension stores your album name, refresh preference, and cached public albu
 
 ## Data flow
 
-- Change check: `GET https://api.osrs-tcg.net/api/v1/players/{album}/stats`
-- Album: `GET https://api.osrs-tcg.net/api/v1/players/{album}`
+- Player stats: `GET https://api.osrs-tcg.net/api/v1/players/{rsn}/stats`
+- Player collection: `GET https://api.osrs-tcg.net/api/v1/players/{rsn}`
 - Catalog: `GET https://api.osrs-tcg.net/api/v1/catalog/cards/live`
 - The small stats response is checked on a timer and when **Refresh now** is pressed.
 - Automatic refresh defaults to every 15 minutes; available intervals are 15, 20, and 30 minutes.
-- The full album is downloaded only when the stats change.
+- The full collection is downloaded only when the stats change.
 - `ETag`/`If-None-Match` avoids downloading unchanged stats.
 - Wiki redirect resolutions are cached for seven days, including non-redirect results, and capped at 2,000 entries.
-- Clicking a card-backed page status opens the album and fills its client-side card search; variants search by their variant name.
+- Clicking a card-backed page status opens the player's collection and fills its client-side card search; variants search by their variant name.
 - API requests run in the extension service worker, not in the Wiki page.
 
 ## Current scope
