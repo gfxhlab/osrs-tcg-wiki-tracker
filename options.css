@@ -81,9 +81,19 @@ button.secondary {
   display: none;
 }
 
+.source-link {
+  margin: 16px 0 0;
+  font-size: 12px;
+}
+
+.source-link a {
+  color: #1769aa;
+}
+
 @media (prefers-color-scheme: dark) {
   body { color: #eee; background: #252525; }
   .intro, .status { color: #bbb; }
   input, select { color: #eee; background: #333; border-color: #666; }
   button.secondary { color: #eee; }
+  .source-link a { color: #6db3e8; }
 }
