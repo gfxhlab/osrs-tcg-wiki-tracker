@@ -1,6 +1,7 @@
 const API_BASE = 'https://api.osrs-tcg.net/api/v1';
 const DEFAULT_SETTINGS = {
   album: 'FoilsGold',
+  collectionMode: 'individual',
   refreshMinutes: 15,
 };
 
@@ -75,14 +76,26 @@ async function getSettings() {
   return normalizeSettings(stored[STORAGE_KEYS.settings]);
 }
 
-async function saveSettings(next) {
+// Serialize settings changes and refreshes so an old request cannot overwrite a new mode.
+let collectionQueue = Promise.resolve();
+function enqueueCollection(operation) {
+  const result = collectionQueue.then(operation);
+  collectionQueue = result.catch(() => {});
+  return result;
+}
+
+function saveSettings(next) {
+  return enqueueCollection(() => saveSettingsNow(next));
+}
+
+async function saveSettingsNow(next) {
   const settings = normalizeSettings(next);
   const previous = await getSettings();
   await chrome.storage.local.set({ [STORAGE_KEYS.settings]: settings });
   if (settings.refreshMinutes !== previous.refreshMinutes) {
     await scheduleRefresh();
   }
-  if (settings.album !== previous.album) {
+  if (settings.album !== previous.album || settings.collectionMode !== previous.collectionMode) {
     await chrome.storage.local.remove([
       STORAGE_KEYS.album,
       STORAGE_KEYS.albumEtag,
@@ -104,6 +117,7 @@ function normalizeSettings(settings) {
     : DEFAULT_SETTINGS.refreshMinutes;
   return {
     album: album || DEFAULT_SETTINGS.album,
+    collectionMode: settings?.collectionMode === 'group' ? 'group' : 'individual',
     refreshMinutes,
   };
 }
@@ -117,7 +131,11 @@ async function scheduleRefresh() {
   });
 }
 
-async function getSnapshot() {
+function getSnapshot() {
+  return enqueueCollection(getSnapshotNow);
+}
+
+async function getSnapshotNow() {
   const stored = await chrome.storage.local.get([
     STORAGE_KEYS.settings,
     STORAGE_KEYS.album,
@@ -127,23 +145,38 @@ async function getSnapshot() {
   const album = stored[STORAGE_KEYS.album] || null;
   const catalog = stored[STORAGE_KEYS.catalog] || null;
   if (!album || !catalog) {
-    return refreshCollection();
+    return refreshCollectionNow();
   }
   return {
     ok: true,
     settings: normalizeSettings(stored[STORAGE_KEYS.settings]),
-    album,
+    album: normalizeCollection(album, normalizeSettings(stored[STORAGE_KEYS.settings]).collectionMode),
     catalog,
     fetchedAt: stored[STORAGE_KEYS.albumFetchedAt] || null,
   };
 }
 
-async function refreshCollection() {
+function refreshCollection() {
+  return enqueueCollection(refreshCollectionNow);
+}
+
+function normalizeCollection(data, mode) {
+  const collection = mode === 'group' ? data?.group : data;
+  if (!collection || !Array.isArray(collection.cardEntries)) {
+    throw new Error(mode === 'group'
+      ? 'Group collection unavailable: expected group.cardEntries. Check that this player belongs to a public group.'
+      : 'Invalid player collection response: expected cardEntries.');
+  }
+  return collection;
+}
+
+async function refreshCollectionNow() {
   const settings = await getSettings();
   const now = Date.now();
   const stored = await chrome.storage.local.get([
     STORAGE_KEYS.album,
     STORAGE_KEYS.albumEtag,
+    STORAGE_KEYS.albumFetchedAt,
     STORAGE_KEYS.catalog,
     STORAGE_KEYS.catalogEtag,
     STORAGE_KEYS.catalogFetchedAt,
@@ -151,12 +184,14 @@ async function refreshCollection() {
     STORAGE_KEYS.albumStatsEtag,
   ]);
 
-  const statsResult = await fetchCachedJson(
+  const isGroup = settings.collectionMode === 'group';
+  // Individual stats cannot detect changes to another group member's cards.
+  const statsResult = isGroup ? { data: null, etag: null } : await fetchCachedJson(
     `${API_BASE}/players/${encodeURIComponent(settings.album)}/stats`,
     stored[STORAGE_KEYS.albumStats],
     stored[STORAGE_KEYS.albumStatsEtag],
   );
-  const statsChanged = !stored[STORAGE_KEYS.album]
+  const statsChanged = isGroup || !stored[STORAGE_KEYS.album]
     || JSON.stringify(statsResult.data) !== JSON.stringify(stored[STORAGE_KEYS.albumStats]);
 
   let albumResult = {
@@ -165,13 +200,15 @@ async function refreshCollection() {
   };
   let albumFetchedAt = null;
   if (statsChanged) {
+    const url = isGroup
+      ? `https://osrs-tcg.net/api/v1/players/${encodeURIComponent(settings.album)}/group`
+      : `${API_BASE}/players/${encodeURIComponent(settings.album)}`;
     albumResult = await fetchCachedJson(
-      `${API_BASE}/players/${encodeURIComponent(settings.album)}`,
-      stored[STORAGE_KEYS.album],
-      stored[STORAGE_KEYS.albumEtag],
+      url, stored[STORAGE_KEYS.album], stored[STORAGE_KEYS.albumEtag],
     );
     albumFetchedAt = now;
   }
+  const album = normalizeCollection(albumResult.data, settings.collectionMode);
 
   let catalogResult;
   const catalogIsFresh = stored[STORAGE_KEYS.catalog]
@@ -191,12 +228,12 @@ async function refreshCollection() {
 
   const values = {
     [STORAGE_KEYS.album]: albumResult.data,
-    [STORAGE_KEYS.albumEtag]: albumResult.etag || stored[STORAGE_KEYS.albumEtag] || null,
+    [STORAGE_KEYS.albumEtag]: albumResult.etag || null,
     [STORAGE_KEYS.albumFetchedAt]: albumFetchedAt || stored[STORAGE_KEYS.albumFetchedAt] || now,
     [STORAGE_KEYS.albumStats]: statsResult.data,
-    [STORAGE_KEYS.albumStatsEtag]: statsResult.etag || stored[STORAGE_KEYS.albumStatsEtag] || null,
+    [STORAGE_KEYS.albumStatsEtag]: statsResult.etag || null,
     [STORAGE_KEYS.catalog]: catalogResult.data,
-    [STORAGE_KEYS.catalogEtag]: catalogResult.etag || stored[STORAGE_KEYS.catalogEtag] || null,
+    [STORAGE_KEYS.catalogEtag]: catalogResult.etag || null,
     [STORAGE_KEYS.catalogFetchedAt]: catalogIsFresh
       ? stored[STORAGE_KEYS.catalogFetchedAt]
       : now,
@@ -206,8 +243,8 @@ async function refreshCollection() {
   const snapshot = {
     ok: true,
     settings,
-    album: albumResult.data,
-    stats: statsResult.data,
+    album,
+    stats: isGroup ? album.stats : statsResult.data,
     catalog: catalogResult.data,
     fetchedAt: albumFetchedAt || stored[STORAGE_KEYS.albumFetchedAt] || now,
   };
@@ -239,7 +276,7 @@ async function fetchCachedJson(url, cachedData, etag) {
   }
   return {
     data: await response.json(),
-    etag: response.headers.get('ETag') || etag || null,
+    etag: response.headers.get('ETag') || null,
   };
 }
 

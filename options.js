@@ -1,4 +1,5 @@
 const albumInput = document.querySelector('#album');
+const collectionModeInput = document.querySelector('#collectionMode');
 const refreshInput = document.querySelector('#refreshMinutes');
 const status = document.querySelector('#status');
 document.querySelector('#version').textContent = `Version ${chrome.runtime.getManifest().version}`;
@@ -8,6 +9,7 @@ document.querySelector('#save').addEventListener('click', async () => {
     type: 'SAVE_SETTINGS',
     settings: {
       album: albumInput.value,
+      collectionMode: collectionModeInput.value,
       refreshMinutes: Number(refreshInput.value),
     },
   });
@@ -31,6 +33,7 @@ async function loadSettings() {
   const response = await send({ type: 'GET_SETTINGS' });
   if (response?.settings) {
     albumInput.value = response.settings.album;
+    collectionModeInput.value = response.settings.collectionMode || 'individual';
     refreshInput.value = String(response.settings.refreshMinutes);
   }
 }
@@ -41,7 +44,8 @@ function showResult(response) {
     return;
   }
   const count = response?.album?.stats?.uniqueOwned ?? response?.album?.cardEntries?.length;
-  showStatus(`Updated${count == null ? '' : ` · ${Number(count).toLocaleString()} unique cards owned`}.`);
+  const label = response?.settings?.collectionMode === 'group' ? 'Group collection' : 'Individual collection';
+  showStatus(`${label} updated${count == null ? '' : ` · ${Number(count).toLocaleString()} unique cards owned`}.`);
 }
 
 function showStatus(message, error = false) {
