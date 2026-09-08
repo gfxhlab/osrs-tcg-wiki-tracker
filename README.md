@@ -25,7 +25,7 @@ Or use **Code → Download ZIP** on GitHub and extract the ZIP.
 3. Click **Load unpacked**.
 4. Select the downloaded or cloned repository directory—the folder containing `manifest.json`.
 5. Open the extension popup and enter your public RuneScape username (RSN). It defaults to `FoilsGold`.
-6. Open or reload an OSRS Wiki item page, such as `https://oldschool.runescape.wiki/w/Excalibur`.
+6. Open or reload any OSRS Wiki article page, such as `https://oldschool.runescape.wiki/w/Excalibur` or a quest page like `https://oldschool.runescape.wiki/w/Sheep_Shearer`.
 
 ### Update
 
