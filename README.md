@@ -75,4 +75,4 @@ The extension is designed to minimize requests to the OSRS TCG API:
 
 ## Current scope
 
-The prototype decorates individual item/NPC pages and annotates matching links inside Wiki article content, including quest and guide pages. It matches Wiki page names, unambiguous catalog display-name aliases, and API-provided card variants, uses `(kind, id)` to distinguish items from NPCs with the same name, and batch-resolves Wiki redirects and item/NPC/monster infoboxes through MediaWiki so aliases such as pluralized item names and no-card NPCs work too.
+The extension decorates individual item/NPC pages and annotates matching links inside Wiki article content, including quest and guide pages. It matches Wiki page names, unambiguous catalog display-name aliases, and API-provided card variants, uses `(kind, id)` to distinguish items from NPCs with the same name, and batch-resolves Wiki redirects and item/NPC/monster infoboxes through MediaWiki so aliases such as pluralized item names and no-card NPCs work too.
